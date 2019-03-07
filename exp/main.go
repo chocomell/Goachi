@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
+	"runtime"
 	"time"
 )
 
@@ -22,6 +23,8 @@ type Goachi struct {
 
 func main() {
 	//start up
+	os := runtime.GOOS
+	clear(os) //blanks screen.
 
 	Gai := &Goachi{Name: "Tama", Age: 0, Health: 100, Waste: false, Hunger: 100}
 	//First user stuff:
@@ -29,7 +32,6 @@ func main() {
 	// fmt.Scanln(&Gai.Name)
 
 	// fmt.Println(Gai.Name)
-	fmt.Println("\033[2J") //blanks terminal unix only
 
 	for { //Day Cycle Loop
 		Sleep()
@@ -106,5 +108,20 @@ func clearWin() {
 	cmd := exec.Command("cmd", "/c", "cls")
 	cmd.Stdout = os.Stdout
 	cmd.Run()
+
+}
+
+func clearLin() {
+	fmt.Println("\033[2J") //blanks terminal unix only
+}
+
+func clear(os string) {
+	switch os {
+	case "windows":
+		clearWin()
+	case "linux":
+		clearLin()
+
+	}
 
 }

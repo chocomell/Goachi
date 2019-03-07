@@ -3,6 +3,9 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"os"
+	"os/exec"
+	"runtime"
 	"time"
 )
 
@@ -20,13 +23,15 @@ type Goachi struct {
 
 func main() {
 	//start up
+	os := runtime.GOOS
+	clear(os) //blanks screen.
+
 	Gai := &Goachi{Name: "Tama", Age: 0, Health: 100, Waste: false, Hunger: 100}
 	//First user stuff:
 	// fmt.Print("Enter name: ")
 	// fmt.Scanln(&Gai.Name)
 
 	// fmt.Println(Gai.Name)
-	fmt.Println("\033[2J") //blanks terminal unix only
 
 	for { //Day Cycle Loop
 		Sleep()
@@ -43,6 +48,19 @@ func main() {
 			fmt.Println("Iam slowly dying!")
 		}
 		fmt.Println("==================================================================")
+
+		var command string
+		fmt.Print("Enter command: ")
+		fmt.Scanln(&command)
+		switch command {
+		case "feed":
+			fmt.Println("hunger + 5")
+		case "clean":
+			fmt.Println("waste false")
+		case "heal":
+			fmt.Println("health + 0")
+		}
+		//TO DO MAKE APP CONTINUE ON NO INPUT
 
 		//Multipliers:
 		Gai.HungerDegrader()
@@ -83,4 +101,27 @@ func (g *Goachi) HealthDegrader() {
 
 func (g *Goachi) HungerDegrader() {
 	g.Hunger = (g.Hunger - 20) //health degration
+}
+
+func clearWin() {
+	//TO DO CREATE LINUX ON AND ADD OS CHECKKING. ANDROID?
+	cmd := exec.Command("cmd", "/c", "cls")
+	cmd.Stdout = os.Stdout
+	cmd.Run()
+
+}
+
+func clearLin() {
+	fmt.Println("\033[2J") //blanks terminal unix only
+}
+
+func clear(os string) {
+	switch os {
+	case "windows":
+		clearWin()
+	case "linux":
+		clearLin()
+
+	}
+
 }
