@@ -11,6 +11,7 @@ import (
 
 const (
 	cyclespeed = 3 //in seconds
+	debug      = true
 )
 
 type Goachi struct {
@@ -25,18 +26,17 @@ func main() {
 	//start up
 	os := runtime.GOOS
 	clear(os) //blanks screen.
-
 	Gai := &Goachi{Name: "Tama", Age: 0, Health: 100, Waste: false, Hunger: 100}
-	//First user stuff:
-	// fmt.Print("Enter name: ")
-	// fmt.Scanln(&Gai.Name)
+	Gai.startup()
 
-	// fmt.Println(Gai.Name)
+	go Gai.program()
+	termInput()
+}
 
-	for { //Day Cycle Loop
-		Sleep()
-
-		//prgram prints:
+func (Gai *Goachi) program() {
+	//Day Cycle Loop
+	for {
+		//program prints:
 		fmt.Println("name is:", Gai.Name)
 		fmt.Println("health is:", Gai.Health)
 		fmt.Println("age is:", Gai.Age)
@@ -47,26 +47,15 @@ func main() {
 		if Gai.Health <= 50 {
 			fmt.Println("Iam slowly dying!")
 		}
+		fmt.Println(">.. enter command <commands>")
 		fmt.Println("==================================================================")
-
-		var command string
-		fmt.Print("Enter command: ")
-		fmt.Scanln(&command)
-		switch command {
-		case "feed":
-			fmt.Println("hunger + 5")
-		case "clean":
-			fmt.Println("waste false")
-		case "heal":
-			fmt.Println("health + 0")
-		}
-		//TO DO MAKE APP CONTINUE ON NO INPUT
 
 		//Multipliers:
 		Gai.HungerDegrader()
 		Gai.HealthDegrader()
 		Gai.Waster()
 		Gai.Age = (Gai.Age + 1)
+		Sleep()
 	}
 }
 
@@ -87,15 +76,15 @@ func (g *Goachi) Waster() {
 	}
 }
 
-func (g *Goachi) HealthDegrader() {
-	if g.Hunger <= 0 {
+func (Gai *Goachi) HealthDegrader() {
+	if Gai.Waste == true {
+		Gai.Health = (Gai.Health - 10) //health degration
+	}
+	if Gai.Health <= 0 {
 		for {
 			fmt.Println("GAME OVER")
-			time.Sleep(1000 * time.Second)
+			time.Sleep(9000 * time.Hour)
 		}
-	}
-	if g.Waste == true {
-		g.Health = (g.Health - 10) //health degration
 	}
 }
 
@@ -103,12 +92,19 @@ func (g *Goachi) HungerDegrader() {
 	g.Hunger = (g.Hunger - 20) //health degration
 }
 
+func (Gai *Goachi) startup() {
+	if debug != true {
+		fmt.Print("Enter name: ")
+		fmt.Scanln(&Gai.Name)
+		fmt.Println(Gai.Name)
+	}
+}
+
 func clearWin() {
 	//TO DO CREATE LINUX ON AND ADD OS CHECKKING. ANDROID?
 	cmd := exec.Command("cmd", "/c", "cls")
 	cmd.Stdout = os.Stdout
 	cmd.Run()
-
 }
 
 func clearLin() {
@@ -121,7 +117,21 @@ func clear(os string) {
 		clearWin()
 	case "linux":
 		clearLin()
-
 	}
+}
 
+func termInput() {
+	for {
+		fmt.Println("start input()")
+		var command string
+		fmt.Scanln(&command)
+		switch command {
+		case "feed":
+			fmt.Println("hunger + 5")
+		case "clean":
+			fmt.Println("waste false")
+		case "heal":
+			fmt.Println("health + 0")
+		}
+	}
 }
