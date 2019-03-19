@@ -24,8 +24,9 @@ type Goachi struct {
 
 func main() {
 	//start up
-	os := runtime.GOOS
-	clear(os) //blanks screen.
+	// os := runtime.GOOS
+	// clear(os) //blanks screen.
+	clear()
 	Gai := &Goachi{Name: "Tama", Age: 0, Health: 100, Waste: false, Hunger: 100}
 	Gai.startup()
 
@@ -102,21 +103,27 @@ func (Gai *Goachi) startup() {
 
 func clearWin() {
 	//TO DO CREATE LINUX ON AND ADD OS CHECKKING. ANDROID?
-	cmd := exec.Command("cmd", "/c", "cls")
-	cmd.Stdout = os.Stdout
-	cmd.Run()
+
 }
 
 func clearLin() {
-	fmt.Println("\033[2J") //blanks terminal unix only
+
 }
 
-func clear(os string) {
-	switch os {
+func clear() {
+	var env string
+	if env == "" {
+		env = runtime.GOOS
+	}
+	fmt.Println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+	time.Sleep(5 * time.Second)
+	switch env {
 	case "windows":
-		clearWin()
+		cmd := exec.Command("cmd", "/c", "cls")
+		cmd.Stdout = os.Stdout
+		cmd.Run()
 	case "linux":
-		clearLin()
+		fmt.Println("\033[2J") //blanks terminal unix only
 	}
 }
 
